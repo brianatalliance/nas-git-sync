@@ -11,6 +11,8 @@ Automated sync script that mirrors all GitHub repositories from `brianatalliance
 
 | Repository | Description |
 |-----------|-------------|
+| `brianatalliance` | GitHub profile README |
+| `nas-git-sync` | This repo — automated GitHub → NAS sync script |
 | `wireguard-vpn-spk` | WireGuard VPN Tunnel SPK for Synology DS220+ |
 | `perplexity-windows-xpc` | Perplexity AI Windows integration (Summon-Aunties) |
 | `perplexity-xpc` | PerplexityXPC broker service and tray app |
@@ -54,6 +56,23 @@ bash /volume1/git/git-sync-nas.sh
 ## Log
 
 Sync logs are written to `/volume1/git/sync.log`.
+
+## Related Projects
+
+- [perplexity-windows-xpc](https://github.com/brianatalliance/perplexity-windows-xpc) — Perplexity AI for Windows — PowerShell, system tray, Office integration
+- [perplexity-xpc](https://github.com/brianatalliance/perplexity-xpc) — PerplexityXPC broker service, tray app, MCP server management
+- [perplexity-connector](https://github.com/brianatalliance/perplexity-connector) — Perplexity Sonar API connector — CLI, streaming, async, structured output
+- [atera-dashboard](https://github.com/brianatalliance/atera-dashboard) — Atera RMM NOC dashboard — React + Vite + Tailwind + Recharts
+- [atera-connector](https://github.com/brianatalliance/atera-connector) — Atera RMM API v3 connector — Python CLI with full CRUD support
+- [synology-connector](https://github.com/brianatalliance/synology-connector) — Synology DSM Web API connector — 40 CLI actions across 10 modules
+- [udm-nspawn-pki](https://github.com/brianatalliance/udm-nspawn-pki) — Two-tier PKI in systemd-nspawn on UniFi Dream Machine Pro
+- [wireguard-vpn-spk](https://github.com/brianatalliance/wireguard-vpn-spk) — WireGuard VPN Tunnel SPK for Synology DS220+ (userspace wireguard-go)
+
+## Author
+
+**Brian Vicente** — Network Coordinator & Cybersecurity Admin, [Alliance for Empowerment](https://www.allianceforempowerment.org)
+
+GitHub: [@brianatalliance](https://github.com/brianatalliance)
 
 ## License
 

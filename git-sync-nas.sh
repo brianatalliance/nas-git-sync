@@ -24,6 +24,8 @@ TOKEN_FILE="${SYNC_DIR}/.gh-token"
 
 # All repositories to sync
 REPOS=(
+    "brianatalliance"
+    "nas-git-sync"
     "wireguard-vpn-spk"
     "perplexity-windows-xpc"
     "perplexity-xpc"
