@@ -1,11 +1,11 @@
 #!/bin/bash
 # GitHub → Synology NAS Git Sync Script
 # Author:  Brian Vicente
-# Version: 1.0.0
+# Version: 1.1.0
 # Date:    2026-03-28
 # Org:     Alliance for Empowerment
 #
-# Syncs all GitHub repositories from brianatalliance to /volume1/git/
+# Syncs GitHub repositories from brianatalliance to /volume1/git/
 # Designed to run as a Scheduled Task in DSM Task Scheduler.
 #
 # Setup:
@@ -14,16 +14,24 @@
 #   3. Generate a GitHub PAT (classic) with 'repo' scope at:
 #      https://github.com/settings/tokens
 #   4. Save token: echo "YOUR_TOKEN" > /volume1/git/.gh-token && chmod 600 /volume1/git/.gh-token
-#   5. Run this script once manually to do initial clone
-#   6. Add to DSM Task Scheduler for automated sync
+#   5. (Optional) Create /volume1/git/repos.conf — one repo name per line
+#   6. Run this script once manually to do initial clone
+#   7. Add to DSM Task Scheduler for automated sync
+#
+# Configuration (environment variables):
+#   SYNC_DIR       — override the sync directory (default: /volume1/git)
+#   GH_USER        — override the GitHub username (default: brianatalliance)
+#   TOKEN_FILE     — override the token file path (default: ${SYNC_DIR}/.gh-token)
+#   REPOS_CONF     — override the repo list config file (default: ${SYNC_DIR}/repos.conf)
 
-SYNC_DIR="/volume1/git"
+SYNC_DIR="${SYNC_DIR:-/volume1/git}"
 LOG_FILE="${SYNC_DIR}/sync.log"
-GH_USER="brianatalliance"
-TOKEN_FILE="${SYNC_DIR}/.gh-token"
+GH_USER="${GH_USER:-brianatalliance}"
+TOKEN_FILE="${TOKEN_FILE:-${SYNC_DIR}/.gh-token}"
+REPOS_CONF="${REPOS_CONF:-${SYNC_DIR}/repos.conf}"
 
-# All repositories to sync
-REPOS=(
+# Default repositories to sync (used when no repos.conf exists)
+DEFAULT_REPOS=(
     "brianatalliance"
     "nas-git-sync"
     "wireguard-vpn-spk"
@@ -55,11 +63,21 @@ if [ -z "${GH_TOKEN}" ]; then
     exit 1
 fi
 
+# Load repo list from config file or fall back to defaults
+if [ -f "${REPOS_CONF}" ]; then
+    log "[CONFIG] Loading repo list from ${REPOS_CONF}"
+    mapfile -t REPOS < <(grep -v '^\s*#' "${REPOS_CONF}" | grep -v '^\s*$')
+else
+    log "[CONFIG] No repos.conf found — using default repo list"
+    log "[CONFIG] Create ${REPOS_CONF} (one repo name per line) to customise"
+    REPOS=("${DEFAULT_REPOS[@]}")
+fi
+
 # Ensure sync directory exists
 mkdir -p "${SYNC_DIR}"
 
 log "========================================="
-log "GitHub Sync Starting"
+log "GitHub Sync Starting (user: ${GH_USER})"
 log "========================================="
 
 SUCCESS=0

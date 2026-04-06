@@ -1,11 +1,11 @@
 # NAS Git Sync
 
 **Author:** Brian Vicente
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Date:** 2026-03-28
 **Org:** Alliance for Empowerment
 
-Automated sync script that mirrors all GitHub repositories from `brianatalliance` to `/volume1/git/` on a Synology NAS.
+Automated sync script that mirrors GitHub repositories from `brianatalliance` to `/volume1/git/` on a Synology NAS.
 
 ## Repositories Synced
 
@@ -21,6 +21,8 @@ Automated sync script that mirrors all GitHub repositories from `brianatalliance
 | `perplexity-connector` | Perplexity Sonar API connector |
 | `atera-connector` | Atera RMM API v3 connector |
 | `atera-dashboard` | Atera NOC dashboard (React) |
+
+The repo list is configurable — see [Configuration](#configuration) below.
 
 ## Setup
 
@@ -53,9 +55,47 @@ bash /volume1/git/git-sync-nas.sh
 #    Script: bash /volume1/git/git-sync-nas.sh
 ```
 
+## Configuration
+
+The script is fully configurable via environment variables and an optional config file — no hardcoded values need to be edited.
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SYNC_DIR` | `/volume1/git` | Directory where repos are synced |
+| `GH_USER` | `brianatalliance` | GitHub username to sync from |
+| `TOKEN_FILE` | `${SYNC_DIR}/.gh-token` | Path to file containing GitHub PAT |
+| `REPOS_CONF` | `${SYNC_DIR}/repos.conf` | Path to optional repo list config file |
+
+### Custom Repo List
+
+Create `/volume1/git/repos.conf` (one repository name per line) to override the default list:
+
+```
+# /volume1/git/repos.conf
+# Lines starting with # are ignored
+nas-git-sync
+perplexity-connector
+atera-connector
+my-custom-repo
+```
+
+When `repos.conf` is present it is used exclusively. When absent, the built-in default list is used.
+
+### Override via Environment
+
+```bash
+# Sync a different user's repos to a different path
+SYNC_DIR=/mnt/backup GH_USER=otheruser bash git-sync-nas.sh
+
+# Use a custom token file
+TOKEN_FILE=/home/user/.secrets/github-token bash git-sync-nas.sh
+```
+
 ## Log
 
-Sync logs are written to `/volume1/git/sync.log`.
+Sync logs are written to `${SYNC_DIR}/sync.log` (default: `/volume1/git/sync.log`).
 
 ## Related Projects
 
@@ -68,11 +108,17 @@ Sync logs are written to `/volume1/git/sync.log`.
 - [udm-nspawn-pki](https://github.com/brianatalliance/udm-nspawn-pki) — Two-tier PKI in systemd-nspawn on UniFi Dream Machine Pro
 - [wireguard-vpn-spk](https://github.com/brianatalliance/wireguard-vpn-spk) — WireGuard VPN Tunnel SPK for Synology DS220+ (userspace wireguard-go)
 
+## Acknowledgments
+
+- [Synology](https://www.synology.com/) — NAS platform and DSM Task Scheduler
+- Git — distributed version control
+- Bash — shell scripting environment
+
 ## Author
 
-**Brian Vicente** — Network Coordinator & Cybersecurity Admin, [Alliance for Empowerment](https://www.allianceforempowerment.org)
+**Brian Vicente** — Network Coordinator & Cybersecurity Admin
 
-GitHub: [@brianatalliance](https://github.com/brianatalliance)
+Built with [Perplexity Computer](https://computer.perplexity.ai)
 
 ## License
 
